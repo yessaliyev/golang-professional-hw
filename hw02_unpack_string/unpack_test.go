@@ -43,3 +43,27 @@ func TestUnpackInvalidString(t *testing.T) {
 		})
 	}
 }
+
+func TestUnpackInvalidSymbols(t *testing.T) {
+	invalidStrings := []string{"3a#", "#!@#5", ")))"}
+	for _, tc := range invalidStrings {
+		tc := tc
+		t.Run(tc, func(t *testing.T) {
+			_, err := Unpack(tc)
+			require.Truef(t, errors.Is(err, ErrInvalidString), "actual error %q", err)
+		})
+	}
+}
+
+func BenchmarkUnpack(b *testing.B) {
+	tests := [4]string{"a4bc2d5e", "abccd", "", "aaa0b"}
+
+	for _, tc := range tests {
+		tc := tc
+		b.Run(tc, func(b *testing.B) {
+			for i := 0; i < b.N; i++ {
+				_, _ = Unpack(tc)
+			}
+		})
+	}
+}
