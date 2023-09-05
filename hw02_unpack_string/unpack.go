@@ -3,7 +3,6 @@ package hw02unpackstring
 import (
 	"errors"
 	"strings"
-	"unicode"
 )
 
 var ErrInvalidString = errors.New("invalid string")
@@ -28,10 +27,6 @@ func Unpack(text string) (string, error) {
 	var checkNum bool
 
 	for _, val := range text {
-		if checkSymbol(val) {
-			return "", ErrInvalidString
-		}
-
 		if val >= numStart && val <= numEnd {
 			if checkNum {
 				return "", ErrInvalidString
@@ -59,25 +54,4 @@ func Unpack(text string) (string, error) {
 	}
 
 	return b.String(), nil
-}
-
-func checkSymbol(val int32) bool {
-	c1 := isEnglishOrCyrillicLetter(val)
-	c2 := val >= numStart && val <= numEnd
-
-	return !c1 && !c2
-}
-
-func isEnglishOrCyrillicLetter(r rune) bool {
-	if unicode.Is(unicode.Latin, r) {
-		return true
-	}
-
-	if unicode.Is(unicode.Cyrillic, r) {
-		return true
-	}
-
-	// Тут можно чекать и другие типы
-
-	return false
 }
